@@ -19,6 +19,9 @@
   "homepage": "https://github.com/mazinabubeker/S_Proj#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "http": "0.0.1-security",
+    "querystring": "^0.2.0",
+    "request": "^2.88.2",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {}

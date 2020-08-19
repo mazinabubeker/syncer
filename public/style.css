@@ -1,10 +1,66 @@
-html, body{
-    height: 100%;
-    font-family: "Roboto";
+.btn{
+  width: 100px;
+  height: fit-content;
+  border: 1px solid black;
+  text-align: center;
+  /* line-height: 50px; */
+  user-select: none;
+  margin-bottom: 10px;
+  padding: 5px;
 }
 
-body{
+.song-item{
+  height: fit-content;
+  padding: 5px;
+  user-select: none;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  /* transition-duration: .15s; */
 }
+
+.artist-text{
+  color: #aaa;
+}
+
+#results{
+  transition-duration: .1s;
+}
+
+p{
+  margin: 0;
+  text-indent: 10px;
+  line-height: 60px;
+  font-size: 24px;
+  font-family: Alata;
+}
+
+#search-input{
+  height: 20px;
+  font-size: 14px;
+  text-indent: 2px;
+  margin-bottom: 10px;
+}
+
+.img-item{
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.song-item:hover{
+  cursor: pointer;
+  background-color: lightblue;
+  
+}
+.song-item:active{
+  background-color: #74aad6;
+  /* transform: scale(.9); */
+}
+.btn:hover{
+  cursor: pointer;
+}
+
+.btn:active{
+  background-color: lightblue;
+}
+
+
