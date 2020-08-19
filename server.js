@@ -3,7 +3,7 @@
 var http = require("http");
 var querystring = require('querystring');
 var request = require('request');
-var REDIRECT_URL = "https://spatifyapp.herokuapp.com/";
+var REDIRECT_URL = "https://syncerapp.herokuapp.com/";
 // var REDIRECT_URL = "http://localhost:3000/";
 
 var express = require('express');
