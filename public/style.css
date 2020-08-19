@@ -1,20 +1,70 @@
+html{
+  background-color: #222;
+  height: 100%;
+  width: 100%;
+  font-family: Alata;
+}
+
+*{
+  border-color: white;
+  color: white;
+}
+
+body{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow:hidden;
+  width: 100%;
+  height: 100%;
+}
+
+
+
 .btn{
-  width: 100px;
-  height: fit-content;
-  border: 1px solid black;
+  position: relative;
+  width: 140px;
+  height: 25px;
+  border: 1px solid white;
   text-align: center;
-  /* line-height: 50px; */
+  line-height: 25px;
   user-select: none;
   margin-bottom: 10px;
   padding: 5px;
 }
 
+.btn:hover{
+background-color: white;
+color: black;
+}
+
+
+.stupid{
+  position: 'absolute';
+  top: '0px';
+  left: '0px';
+}
+
 .song-item{
   height: fit-content;
-  padding: 5px;
-  user-select: none;
-  display: flex;
-  /* transition-duration: .15s; */
+    padding: 5px;
+    padding-left: 15px;
+    user-select: none;
+    box-sizing: border-box;
+    border-left: 2px solid white;
+    margin-bottom: 15px;
+    display: flex;
+}
+
+.song-item:hover p {
+  box-sizing: border-box;
+  transform: translateX(10px);
+  /* border-bottom: 2px solid; */
+}
+
+.song-item p{
+  transition-duration: .05s;
 }
 
 .artist-text{
@@ -22,6 +72,9 @@
 }
 
 #results{
+  margin-top: 20px;
+  width: 800px;
+  height: fit-content;
   transition-duration: .1s;
 }
 
@@ -30,14 +83,25 @@ p{
   text-indent: 10px;
   line-height: 60px;
   font-size: 24px;
-  font-family: Alata;
+  
 }
 
 #search-input{
-  height: 20px;
-  font-size: 14px;
+  border: 1px solid rgba(255,255,255,.3);
+  padding: 10px;
+  margin: 20px;
+  height: 26px;
+  width: 50%!important;
+  font-size: 24px;
   text-indent: 2px;
   margin-bottom: 10px;
+  background: transparent;
+  color: white;
+  font-family: "Roboto Mono";
+}
+
+#search-input:focus{
+  outline: none;
 }
 
 .img-item{
@@ -48,19 +112,17 @@ p{
 
 .song-item:hover{
   cursor: pointer;
-  background-color: lightblue;
+  /* background-color: lightblue; */
   
 }
-.song-item:active{
-  background-color: #74aad6;
+.song-item:active p{
+  transform: translate(10px) scale(.95);
+  /* background-color: #74aad6; */
   /* transform: scale(.9); */
 }
 .btn:hover{
   cursor: pointer;
 }
 
-.btn:active{
-  background-color: lightblue;
-}
 
 

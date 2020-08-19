@@ -157,3 +157,41 @@ app.post('/info', function(req, res) {
     }
   });
 });
+
+// function thingy(){
+//   var options = {
+//     url: 'https://api.spotify.com/v1/me/player/devices',
+//     headers: {
+//       'Authorization': 'Bearer ' + token
+//     },
+//     json: true
+//   };
+//   request.get(options, function(error, response, body) {
+//     console.log("Status: " + response.statusCode + " " + response.statusMessage);
+//     console.log(body);
+//     if(!error){
+//       var options = {
+//         url: 'https://api.spotify.com/v1/me/player',
+//         headers: {
+//           'Authorization': 'Bearer ' + token
+//         },
+//         body: {
+//           device_ids: [body.devices[0].id]
+//         },
+//         json: true
+//       };
+//       request.put(options, function(error, response, body) {
+//         console.log("Status: " + response.statusCode + " " + response.statusMessage);
+//         if(!error){
+//           res.end();
+//         }
+//       });
+//     }
+//   });
+// }
+
+
+// app.post('/switch', function(req, res){
+//   console.log('ok');
+//   thingy();
+// });
