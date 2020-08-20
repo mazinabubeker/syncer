@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/mazinabubeker/S_Proj#readme",
   "dependencies": {
+    "ejs": "^3.1.5",
     "express": "^4.17.1",
     "http": "0.0.1-security",
     "querystring": "^0.2.0",

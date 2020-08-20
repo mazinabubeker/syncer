@@ -7,8 +7,12 @@ var request = require('request');
 var express = require('express');
 var app = express();
 var server = app.listen(process.env.PORT || 3000);
-app.use(express.static('public'));
+app.use(express.static('public'))
 app.use(express.json());
+app.set('views', 'views')
+.set('view engine', 'ejs')
+.get('/', (req, res) => res.render('index'))
+.get('/app', (req, res) => res.render('app'))
 
 var REDIRECT_URL = "https://syncerapp.herokuapp.com/";
 // var REDIRECT_URL = "http://localhost:3000/";

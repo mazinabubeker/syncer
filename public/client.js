@@ -49,17 +49,9 @@ function retrieve_token(){
   .then(data=>{
     // API token has been recieved from server
     // Load main content and add search bar listener
-    document.getElementById('centerer').style.justifyContent = 'start';
-    let main_content = `
-    <input placeholder='Search...' type='text' id='search-input' style='width: 200px;'></div>
-    <img id='load-gif' style='visibility: hidden' src='assets/load.gif'/>
-    <div id='results'></div>
-    `
-    document.getElementById('centerer').insertAdjacentHTML('beforeend', main_content);
-    document.getElementById('search-input').addEventListener('keyup', e=>{
-      if(e.keyCode == 13){
-        request();
-      }
+    fetch('/app').then(resp=>resp.text()).then(res=>{
+      document.body.innerHTML = res;
+      startApp();
     });
   });
 }
@@ -184,4 +176,11 @@ function getAverageColor(image, song){
   b = Math.floor(b);
   song.style.borderColor = 'rgba(' + r + ', ' + g + ', ' + b + ', 1)';
   song.classList.add('visible');
+}
+
+function openPage(e){
+  console.log(e.target.innerHTML)
+  if(e.target.innerHTML == 'Search'){
+    document.getElementById('content').style.display = 'flex';
+  }
 }
