@@ -12,6 +12,7 @@ var app = express();
 var server = app.listen(process.env.PORT || 3000);
 app.use(express.static('public'));
 app.use(express.json());
+
 // app.post('/query_post', (req, res) => {
 //   res.send(req.body);
 //   res.end();
