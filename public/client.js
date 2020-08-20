@@ -44,10 +44,8 @@ function retrieve_token(){
 
     //     });
 
+
     document.body.style.justifyContent = 'start';
-
-
-    // let search_btn = `<div id='btn-search' class='btn' onclick='request()'>SEARCH</div>`;
     let search_btn = ``;
     // search_btn += `<div id='btn-woop' class='btn' onclick='library()'>LIKES</div>`; 
     search_btn += `<input placeholder='Search...' type='text' id='search-input' style='width: 200px;'></div>`;
@@ -87,16 +85,18 @@ function library(){
         
         
         let img_div = document.createElement('img');
+        let magic_div = document.createElement('div');
+        magic_div.classList.add('magic');
         let text_div = document.createElement('p');
-        text_div.innerHTML = data.songs[i].title + ` - <span class='artist-text'>` + data.songs[i].artist + `</span>`;
+        text_div.innerHTML = data.songs[i].title + `<br><span class='artist-text'>` + data.songs[i].artist + `</span>`;
         img_div.classList.add('img-item');
         img_div.src = b;
         new_song.insertAdjacentElement('beforeend', img_div);
-        new_song.insertAdjacentElement('beforeend', text_div);
+        magic_div.insertAdjacentElement('beforeend', text_div);
+        new_song.insertAdjacentElement('beforeend', magic_div);
 
         new_song.addEventListener('click', ()=>{
           playSong(a);
-          text_div.classList.add('stupid');
         });
 
         result_box.insertAdjacentElement('beforeend', new_song);
@@ -124,6 +124,9 @@ function request(){
       document.getElementById('load-gif').style.visibility = 'hidden';
       result_box.innerHTML = '';
       data = JSON.parse(data);
+     
+      var coo = document.getElementById("myCanvas");
+      var ctx = coo.getContext("2d");;
       for(var i = 0; i < data.songs.length; i++){
         document.body.style.filter = "blur(0px)";
         let new_song = document.createElement('div');
@@ -133,15 +136,56 @@ function request(){
         let c = data.songs[i].id;
         new_song.addEventListener('click', ()=>{
           playSong(a);
+
         });
+
+        
         
         let img_div = document.createElement('img');
+        let magic_div = document.createElement('div');
+        magic_div.classList.add('magic');
         let text_div = document.createElement('p');
-        text_div.innerHTML = data.songs[i].title + ` - <span class='artist-text'>` + data.songs[i].artist + `</span>`;
+        text_div.innerHTML = data.songs[i].title + `<br><span class='artist-text'>` + data.songs[i].artist + `</span>`;
         img_div.classList.add('img-item');
         img_div.src = b;
+        img_div.crossOrigin = "Anonymous";
         new_song.insertAdjacentElement('beforeend', img_div);
-        new_song.insertAdjacentElement('beforeend', text_div);
+        magic_div.insertAdjacentElement('beforeend', text_div);
+        new_song.insertAdjacentElement('beforeend', magic_div);
+
+        var new_r = 0;
+        var new_g = 0;
+        var new_b = 0;
+
+        new_song.onmouseenter = function(){
+          ctx.drawImage(img_div, 0, 0, 100, 100);
+          const imageData = ctx.getImageData(0,0,100, 100);
+          var r_total = 0;
+          var g_total = 0;
+          var b_total = 0;
+          for (let i = 0; i < imageData.data.length; i += 4) {
+            r_total += imageData.data[i + 0];
+            g_total += imageData.data[i + 1];
+            b_total += imageData.data[i + 2];
+          }
+
+          // r_total = Math.floor(r_total / imageData.data.length / 4 );
+          // g_total = Math.floor(g_total / imageData.data.length / 4 );
+          // b_total = Math.floor(b_total / imageData.data.length / 4 );
+
+          r_total /= imageData.data.length / 4;
+          g_total /= imageData.data.length / 4;
+          b_total /= imageData.data.length / 4;
+
+          new_r = Math.floor(r_total);
+          new_g = Math.floor(g_total);
+          new_b = Math.floor(b_total);
+
+          new_song.style.backgroundColor = 'rgba(' + new_r + ', ' + new_g + ', ' + new_b + ', .4)';
+        };
+
+        
+
         result_box.insertAdjacentElement('beforeend', new_song);
         // result_box.insertAdjacentHTML('beforeend', `<div class='song-item' style='border-bottom: 2px solid black;' onclick='playSong()'>` +  + `</div>`)
       }
