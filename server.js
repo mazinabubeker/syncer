@@ -10,8 +10,8 @@ var server = app.listen(process.env.PORT || 3000);
 app.use(express.static('public'));
 app.use(express.json());
 
-var REDIRECT_URL = "https://syncerapp.herokuapp.com/";
-// var REDIRECT_URL = "http://localhost:3000/";
+// var REDIRECT_URL = "https://syncerapp.herokuapp.com/";
+var REDIRECT_URL = "http://localhost:3000/";
 
 var c_id = '505f8d8f1a8d4bcaacdcbb0db5da54ca'; // Your client id
 var c_secret = 'cc2dc6c51ead4946bb9e4c73b9d635af'; // Your secret
