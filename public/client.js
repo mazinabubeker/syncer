@@ -1,94 +1,60 @@
+var socket = io();
 var auth_code = '';
-var auth_token = '';
-
-var audioContext = null;
-var meter = null;
-var rafID = null;
-var mediaStreamSource = null;
-
-// Retrieve AudioContext with all the prefixes of the browsers
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
-
-// Get an audio context
-
-
+var unique_id = '';
 $(document).ready(function(){
   // Server has authenticated login [Token authentication redirect]
   if(window.location.href.includes('code')){
     document.getElementById('btn-login').remove();
     const urlParams = new URLSearchParams(window.location.search);
     auth_code = urlParams.get('code');
-    retrieve_token();
+    socket.emit('request-id');
+    socket.on('id-response', newId=>{
+      unique_id = newId;
+      retrieve_token();
+    });
   }
 });
 
 
 // Login button has been pressed [Credential authentication]
 function authorize_login(){
-    fetch('/authorize_login')
-    .then(resp => resp.text())
-    .then(data=>{
-        window.location.href = data;
-    });
-}
-
-
-// Called from after login....
-function retrieve_token(){
-  fetch('/retrieve_token',
-          {
-            method: 'POST',
-            headers: 
-            {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({code: auth_code}),
-          }
-        )
-  .then(resp => resp.text())
-  .then(data=>{
-    // API token has been recieved from server
-    // Load main content and add search bar listener
-    fetch('/app').then(resp=>resp.text()).then(res=>{
-      document.body.innerHTML = res;
-      startApp();
-    });
+  socket.emit('login');
+  socket.on('login-response', res=>{
+    window.location.href = res;
   });
 }
 
+// Called from after login....
+function retrieve_token(){
+  socket.emit('token', {auth_code: auth_code, uid: unique_id});
+  socket.on('token-response', ()=>{
+    load('/app', startApp);
+  });
+}
+
+// User searched for a song
 function request(){
-  // User searched for a song
   document.getElementById('load-gif').style.visibility = 'visible';
   if(document.getElementById('search-input').value  == ''){
     return;
   }
-  fetch('/ask',
-          {
-            method: 'POST',
-            headers: 
-            {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({user_req: document.getElementById('search-input').value}),
-          }
-        )
-  .then(resp => resp.text())
-  .then(data=>{
-    // API responded to search request
+  socket.emit('ask', {user_req: document.getElementById('search-input').value, uid: unique_id});
+  socket.on('ask-response', res=>{
     let result_box = document.getElementById('results');
     result_box.innerHTML = '';
-    data = JSON.parse(data);
-    // var uri, img, id;
+    let data = res;
     for(var i = 0; i < data.songs.length; i++){
       let uri = data.songs[i].uri;
       let img = data.songs[i].img;
       let id = data.songs[i].id;
+      let title = data.songs[i].title;
+      let artist = data.songs[i].artist
+      let uuid = unique_id;
 
       let song = document.createElement('div');
       song.classList.add('song-item')
       song.addEventListener('click', ()=>{
-        playSong(uri);
-        // analyzeSong(id);
+        socket.emit('play', {uri: uri, uid: uuid});
       });
       
       let image = document.createElement('img');
@@ -103,7 +69,7 @@ function request(){
       text_container.classList.add('text-container');
 
       let text = document.createElement('p');
-      text.innerHTML = data.songs[i].title + `<br><span class='artist-text'>` + data.songs[i].artist + `</span>`;
+      text.innerHTML = title + `<br><span class='artist-text'>` + artist + `</span>`;
       
       text_container.insertAdjacentElement('beforeend', text);
       song.insertAdjacentElement('beforeend', image);
@@ -118,48 +84,11 @@ function request(){
   });
 }
 
-function playSong(uri){
-  fetch('/play', {method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({id: uri})
-                    })
-    .then(resp => resp.text())
-    .then(data=>{
-
-    });
-}
-
-function analyzeSong(id){
-  fetch('/analyze', {method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({id: id})
-                    })
-    .then(resp => resp.text())
-    .then(data=>{
-        data = JSON.parse(data);
-        let bar = document.getElementById('vol-bar');
-        console.log(data);
-        for(var i = 0; i < data.segs.length; i++){
-          // console.log(data.segs[i])
-          let volume = data.segs[i].vol;
-          let start = data.segs[i].start;
-          setTimeout(function(){
-            console.log((volume + 100).toString() + 'px')
-            bar.style.width = ((volume + 100)*4).toString() + 'px';
-          }, start*1000);
-        }
-    });
-}
-
 function getAverageColor(image, song){
   let cnv = document.getElementById('myCanvas');
   let ctx = cnv.getContext('2d');
   ctx.drawImage(image, 0, 0, 100, 100);
-  const imageData = ctx.getImageData(0,0,100, 100);
+  const imageData = ctx.getImageData(0,0,100,100);
   var r = 0;
   var g = 0;
   var b = 0;
@@ -168,12 +97,9 @@ function getAverageColor(image, song){
     g += imageData.data[i + 1];
     b += imageData.data[i + 2];
   }
-  r /= imageData.data.length / 4;
-  g /= imageData.data.length / 4;
-  b /= imageData.data.length / 4;
-  r = Math.floor(r);
-  g = Math.floor(g);
-  b = Math.floor(b);
+  r = Math.floor(r/(imageData.data.length/4));
+  g = Math.floor(g/(imageData.data.length/4));
+  b = Math.floor(b/(imageData.data.length/4));
   song.style.borderColor = 'rgba(' + r + ', ' + g + ', ' + b + ', 1)';
   song.classList.add('visible');
 }
@@ -183,4 +109,13 @@ function openPage(e){
   if(e.target.innerHTML == 'Search'){
     document.getElementById('content').style.display = 'flex';
   }
+}
+
+function load(page, callback){
+  fetch(page).then(resp=>resp.text()).then(res=>{
+    document.body.innerHTML = res;
+    if(callback !== undefined){
+      callback();
+    }
+  });
 }
